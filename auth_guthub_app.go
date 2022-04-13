@@ -40,16 +40,12 @@ func authGitHubApp(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	w.Header().Set("Content-Type", "application/json")
 	w.Write(body)
 	return
 }
 
 func generateToken(appID string) (string, error) {
-	/*
-		b, err := ioutil.ReadFile("github_app.pem")
-		if err != nil {
-			return "", err
-		}*/
 	ctx := context.Background()
 	client, err := secretmanager.NewClient(ctx)
 	if err != nil {
@@ -61,7 +57,6 @@ func generateToken(appID string) (string, error) {
 	req := &secretmanagerpb.GetSecretRequest{
 		Name: "AppPrivateKey",
 	}
-
 	// Call the API.
 	result, err := client.GetSecret(ctx, req)
 	if err != nil {
